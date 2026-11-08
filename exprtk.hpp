@@ -1982,7 +1982,6 @@ namespace exprtk
       template <typename Iterator, typename T>
       inline bool bin_string_to_real(Iterator& itr_external, const Iterator end, T& t)
       {
-         printf("entering oct parsing\n");
          if (end == itr_external) return false;
 
          Iterator itr = itr_external;
@@ -2000,7 +1999,6 @@ namespace exprtk
 
          while (end != itr)
          {
-            printf("  checking \"%c\"\n", *itr);
             unsigned int digit;
             switch (*itr)
             {
@@ -2018,7 +2016,6 @@ namespace exprtk
                  first = false;
                  break;
                default:
-                 printf("  hitting default\n");
                  instate = false;
                  break;
             }
@@ -2041,7 +2038,6 @@ namespace exprtk
       template <typename Iterator, typename T>
       inline bool oct_string_to_real(Iterator& itr_external, const Iterator end, T& t)
       {
-         printf("entering oct parsing\n");
          if (end == itr_external) return false;
 
          Iterator itr = itr_external;
@@ -2058,7 +2054,6 @@ namespace exprtk
 
          while (end != itr)
          {
-            printf("  checking \"%c\"\n", *itr);
             unsigned int digit;
             switch (*itr)
             {
@@ -2073,7 +2068,6 @@ namespace exprtk
                  d = d * T(8) + *itr - zero;
                  break;
                default:
-                 printf("  hitting default\n");
                  instate = false;
                  break;
             }
@@ -2094,7 +2088,6 @@ namespace exprtk
       template <typename Iterator, typename T>
       inline bool hex_string_to_real(Iterator& itr_external, const Iterator end, T& t)
       {
-         printf("entering hex parsing\n");
          if (end == itr_external) return false;
 
          Iterator itr = itr_external;
@@ -2111,7 +2104,6 @@ namespace exprtk
 
          while (end != itr)
          {
-            printf("  checking \"%c\"\n", *itr);
             unsigned int digit;
             switch (*itr)
             {
@@ -2144,7 +2136,6 @@ namespace exprtk
                  d = d * T(16) + 10 + *itr - 'A';
                  break;
                default:
-                 printf("  hitting default\n");
                  instate = false;
                  break;
             }
@@ -3123,12 +3114,10 @@ namespace exprtk
             if (!is_end(s_itr_) && !is_end(s_itr_+1) && *s_itr_ == '0' && (std::tolower(*(s_itr_ + 1)) == 'x' || std::tolower(*(s_itr_ + 1)) == 'o' || std::tolower(*(s_itr_ + 1)) == 'b'))
             {
                const char_t& c = std::tolower(*(s_itr_ + 1));
-               printf("entering hex token scan\n");
                s_itr_ += 2;
                bool found_one = false;
                while (!is_end(s_itr_))
                {
-                 printf("   checking \"%c\" / %d\n", *s_itr_, *s_itr_);
                  if (('x' == c && details::is_hex_digit(*s_itr_)) ||
                      ('o' == c && details::is_oct_digit(*s_itr_)) ||
                      ('b' == c && details::is_bin_digit(*s_itr_)))
@@ -3137,10 +3126,8 @@ namespace exprtk
                  }
                  else
                  {
-                   printf("   not hex digit, found one %d\n", found_one);
                    if (!found_one)
                    {
-                     printf("   hitting error\n");
                      t.set_error(token::e_err_number, initial_itr, s_itr_, base_itr_);
                      token_list_.push_back(t);
 
@@ -3148,7 +3135,6 @@ namespace exprtk
                    }
                    else
                    {
-                     printf("   hitting break\n");
                      break;
                    }
                  }
@@ -3157,7 +3143,6 @@ namespace exprtk
             }
             else
             {
-              printf("entering dec token scan\n");
               while (!is_end(s_itr_))
               {
                 if ('.' == (*s_itr_))
