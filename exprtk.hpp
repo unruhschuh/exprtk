@@ -515,7 +515,7 @@ namespace exprtk
 
       static const std::string assignment_ops_list[] =
       {
-         ":=", "+=", "-=",
+         "=", "+=", "-=",
          "*=", "/=", "%="
       };
 
@@ -524,7 +524,7 @@ namespace exprtk
       static const std::string inequality_ops_list[] =
       {
          "<",  "<=", "==",
-         "=",  "!=", "<>",
+         "!=", "<>",
          ">=",  ">"
       };
 
@@ -2590,7 +2590,7 @@ namespace exprtk
                case e_number      : return "NUMBER";
                case e_symbol      : return "SYMBOL";
                case e_string      : return "STRING";
-               case e_assign      : return ":=";
+               case e_assign      : return "=";
                case e_addass      : return "+=";
                case e_subass      : return "-=";
                case e_mulass      : return "*=";
@@ -2603,7 +2603,7 @@ namespace exprtk
                case e_gte         : return ">=";
                case e_lt          : return "<";
                case e_gt          : return ">";
-               case e_eq          : return "=";
+               case e_eq          : return "==";
                case e_rbracket    : return ")";
                case e_lbracket    : return "(";
                case e_rsqrbracket : return "]";
@@ -3016,7 +3016,6 @@ namespace exprtk
                else if ((c0 == '<') && (c1 == '>')) ttype = token_t::e_ne;
                else if ((c0 == '!') && (c1 == '=')) ttype = token_t::e_ne;
                else if ((c0 == '=') && (c1 == '=')) ttype = token_t::e_eq;
-               else if ((c0 == ':') && (c1 == '=')) ttype = token_t::e_assign;
                else if ((c0 == '<') && (c1 == '<')) ttype = token_t::e_shl;
                else if ((c0 == '>') && (c1 == '>')) ttype = token_t::e_shr;
                else if ((c0 == '+') && (c1 == '=')) ttype = token_t::e_addass;
@@ -3044,6 +3043,8 @@ namespace exprtk
                t.set_symbol(s_itr_, s_itr_ + 1, base_itr_);
             else if ('|' == c0)
                t.set_symbol(s_itr_, s_itr_ + 1, base_itr_);
+            else if ('=' == c0)
+               t.set_operator(token_t::e_assign, s_itr_, s_itr_ + 1, base_itr_);
             else
                t.set_operator(token_t::token_type(c0), s_itr_, s_itr_ + 1, base_itr_);
 
@@ -3832,17 +3833,8 @@ namespace exprtk
 
             inline bool join(const lexer::token& t0, const lexer::token& t1, lexer::token& t) exprtk_override
             {
-              // ': =' --> ':='
-              if ((t0.type == lexer::token::e_colon) && (t1.type == lexer::token::e_eq))
-              {
-                t.type     = lexer::token::e_assign;
-                t.value    = ":=";
-                t.position = t0.position;
-
-                return true;
-              }
               // '+ =' --> '+='
-              else if ((t0.type == lexer::token::e_add) && (t1.type == lexer::token::e_eq))
+              if ((t0.type == lexer::token::e_add) && (t1.type == lexer::token::e_eq))
               {
                 t.type     = lexer::token::e_addass;
                 t.value    = "+=";
@@ -5379,7 +5371,7 @@ pre/postfix decrement operator
          case e_div    : return  "/"  ;
          case e_mod    : return  "%"  ;
          case e_pow    : return  "^"  ;
-         case e_assign : return ":="  ;
+         case e_assign : return "="  ;
          case e_addass : return "+="  ;
          case e_subass : return "-="  ;
          case e_mulass : return "*="  ;
@@ -24630,7 +24622,7 @@ pre/postfix decrement operator
          {
             switch (opr)
             {
-               case details::e_assign : return ":=";
+               case details::e_assign : return "=";
                case details::e_addass : return "+=";
                case details::e_subass : return "-=";
                case details::e_mulass : return "*=";
